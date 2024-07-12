@@ -31,7 +31,7 @@ ui <- page_fillable(
       sliderInput("k_param",
                   label=NULL,
                   min = 0,
-                  max = 3,
+                  max = 2,
                   value = 1,
                   step = 0.01),
       sliderInput("beta",
@@ -42,15 +42,15 @@ ui <- page_fillable(
                   step = 0.1),
       sliderInput("effort",
                   "Effort level",
-                  min = 1,
-                  max = 5, 
+                  min = 2,
+                  max = 6, 
                   value = 1,
                   #step = 0.1),
                   step = 1),
       sliderInput("reward",
                   "Reward level",
-                  min = 1,
-                  max = 5,
+                  min = 2,
+                  max = 6,
                   value = 1,
                   #step = 0.1)
                   step = 1)
@@ -74,8 +74,6 @@ ui <- page_fillable(
     
     plotOutput("effort_plot"),
     
-    sprintf("testing including datatable. Should be possible make it editable and tied to the figures above"),
-    DTOutput("table")
   )
 )
 
@@ -108,7 +106,7 @@ server <- function(input, output) {
   output$sv_expression <- renderUI({
     withMathJax(
       if (input$func_form == "Linear") {
-        sprintf("$$SV = R - kE$$]")
+        sprintf("$$SV = R - kE$$")
       } else if (input$func_form == "Parabolic") {
         sprintf("$$SV = R - kE^2$$")
       } else if (input$func_form == "Hyperbolic") {
@@ -123,46 +121,6 @@ server <- function(input, output) {
     )
   })
   
-  # output$math_expressions <- renderUI({
-  #   if (input$func_form == "Linear") {
-  #     sv_expr = sprintf("$$SV = R - kE$$")
-  #   } else if (input$func_form == "Parabolic") {
-  #     sv_expr = sprintf("$$SV = R - kE^2$$")
-  #   } else if (input$func_form == "Hyperbolic") {
-  #     sv_expr = sprintf("$$SV = \\frac{R}{1+kE}$$")
-  #   }
-  #   
-  #   withMathJax(
-  #     sv_expr, #SV formula
-  #     sprintf("$$P(work) = \\frac{e^{SV*\\beta}}{e^{SV*\\beta} + e^{1*\\beta}}$$") #softmax formula
-  #   )
-  #   
-  # })
-  
-   
-  # output$sv_print <- renderUI({
-  #   if (input$func_form == "Linear") {
-  #     sv_text = sprintf("$$%.2f = %i - (%.2f)%i$$", SV_compute(), input$reward, input$k_param, input$effort)
-  #   } else if (input$func_form == "Parabolic") {
-  #     sv_text = sprintf("$$%.2f = %i - (%.2f)(%i^2)$$", SV_compute(), input$reward, input$k_param, input$effort)
-  #   } else if (input$func_form == "Hyperbolic") {
-  #     sv_text = sprintf("$$%.2f = \\frac{%i}{1 + (%.2f)%i}$$", SV_compute(), input$reward, input$k_param, input$effort)
-  #   }  
-  #   withMathJax(sv_text)  
-  # })
-  
-  # output$softmax_print <- renderUI({
-  #     soft_out <- softmax(SV_compute())
-  #     SV <- SV_compute()
-  #     beta <- input$beta
-  #     sv_text = sprintf("$$%.2f = %i - (%.2f)%i$$", SV_compute(), input$reward, input$k_param, input$effort)
-  #     
-  #     withMathJax(
-  #       
-  #       sprintf("$$%.3f = \\frac{e^{%.2f*%.2f}}{e^{%.2f*%.2f} + e^{1*%.2f}}$$", soft_out, SV, beta, SV, beta, beta)
-  #     )
-  # })
-  
   output$math_output <- renderUI({
     
     SV <- SV_compute()
@@ -173,11 +131,11 @@ server <- function(input, output) {
     reward <-input$reward
     
     if (input$func_form == "Linear") {
-      sv_text = sprintf("$$%.2f = %i - (%.2f)%i$$", SV, reward, k_param, effort)
+      sv_text = sprintf("$$%.2f = %i - %.2f*%i$$", SV, reward, k_param, effort)
     } else if (input$func_form == "Parabolic") {
-      sv_text = sprintf("$$%.2f = %i - (%.2f)(%i^2)$$", SV, reward, k_param, effort)
+      sv_text = sprintf("$$%.2f = %i - %.2f*%i^2$$", SV, reward, k_param, effort)
     } else if (input$func_form == "Hyperbolic") {
-      sv_text = sprintf("$$%.2f = \\frac{%i}{1 + (%.2f)%i}$$", SV, reward, k_param, effort)
+      sv_text = sprintf("$$%.2f = \\frac{%i}{1 + %.2f*%i}$$", SV, reward, k_param, effort)
     }
     
     withMathJax(
@@ -187,13 +145,7 @@ server <- function(input, output) {
   })
   
   output$softmax_plot <- renderPlot({
-    
-    # include choices based on softmax? would need to be recalculated
-    # each time, which could become expensive...
-    # might be a way to preallocate to workaround (set a seed and load all possibilities?)
-    # choice = as.numeric(soft_out > runif(length(soft_out)))
-
-    curve(softmax(x), from=-6, to=6)
+    curve(softmax(x), from=-6, to=6, xlab = "SV work", ylab = "Prob")
     points(SV_compute(), softmax(SV_compute()), col = "red", bg = "red", pch = 21)
   })
 
@@ -202,23 +154,17 @@ server <- function(input, output) {
     effort = input$effort
     
     if (input$func_form == "Linear") {
-      curve(-x*k_param, from=1, to=5, ylim=c(-15,-0))
+      curve(-x*k_param, from=2, to=6, ylim=c(-15,-0), xlab = "Effort level", ylab = "SV")
     } else if (input$func_form == "Parabolic") {
-      curve(-((x^2)*k_param), from=1, to=5, ylim=c(-50,0))
+      curve(-((x^2)*k_param), from=2, to=6, ylim=c(-50,0), xlab = "Effort level", ylab = "SV")
       points(effort, -((effort^2)*k_param), col="red", bg="red", pch=21)
     } else if (input$func_form == "Hyperbolic") {
-      curve(1/(1+x*k_param), from=1, to=5, ylim=c(0,1))
+      curve(1/(1+x*k_param), from=2, to=6, ylim=c(0,1), xlab = "Effort level", ylab = "SV")
     }
   }
   
   output$effort_plot <- renderPlot({
     create_curve()
-  })
-  
-  output$table <- renderDT({
-    testtable$SV <- testtable$reward_level - (testtable$effort_level*input$k_param)
-    testtable$SV = round(testtable$SV, digits=4)
-    testtable
   })
   
 }
