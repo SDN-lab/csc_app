@@ -70,9 +70,9 @@ ui <- page_fillable(
     #uiOutput("softmax_print"),
     uiOutput("math_output"),
     
-    plotOutput("softmax_plot"),
-    
     plotOutput("effort_plot"),
+    
+    plotOutput("softmax_plot"),
     
   )
 )
@@ -144,11 +144,6 @@ server <- function(input, output) {
     )
   })
   
-  output$softmax_plot <- renderPlot({
-    curve(softmax(x), from=-6, to=6, xlab = "SV work", ylab = "Prob")
-    points(SV_compute(), softmax(SV_compute()), col = "red", bg = "red", pch = 21)
-  })
-
   create_curve <- function() {
     k_param = input$k_param
     effort = input$effort
@@ -166,6 +161,12 @@ server <- function(input, output) {
   output$effort_plot <- renderPlot({
     create_curve()
   })
+  
+  output$softmax_plot <- renderPlot({
+    curve(softmax(x), from=-6, to=6, xlab = "SV work", ylab = "Prob")
+    points(SV_compute(), softmax(SV_compute()), col = "red", bg = "red", pch = 21)
+  })
+
   
 }
 
