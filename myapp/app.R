@@ -12,13 +12,15 @@ library(bslib) #for css stuff...
 library(DT) #editable data tables
 library(ggplot2)
 
+options(shiny.mathjax.url = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js")
+
 # Define UI for application that draws a histogram
 ui <- page_fillable(
 
   # Application title
-  titlePanel("Summer school test"),
+  titlePanel("CSC 2024 effort discounting demo"),
   
-
+  tags$head(tags$script('<script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>')),
 
   # Sidebar with a slider input for number of bins
   layout_sidebar(
@@ -61,7 +63,7 @@ ui <- page_fillable(
                 choices = list("Linear" = "Linear", "Parabolic" = "Parabolic", "Hyperbolic" = "Hyperbolic"),
                 selected = "Parabolic"
     ),
-    uiOutput("sv_expression"),
+    withMathJax(uiOutput("sv_expression")),
     uiOutput("softmax_expression"),
     
     #uiOutput("sv_print"),
@@ -106,7 +108,7 @@ server <- function(input, output) {
   output$sv_expression <- renderUI({
     withMathJax(
       if (input$func_form == "Linear") {
-        sprintf("\\(SV = R - kE\\)")
+        sprintf("\\[SV = R - kE\\]")
       } else if (input$func_form == "Parabolic") {
         sprintf("$$SV = R - kE^2$$")
       } else if (input$func_form == "Hyperbolic") {
