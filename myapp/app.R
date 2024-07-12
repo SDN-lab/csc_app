@@ -108,7 +108,7 @@ server <- function(input, output) {
   output$sv_expression <- renderUI({
     withMathJax(
       if (input$func_form == "Linear") {
-        sprintf("\\[SV = R - kE\\]")
+        sprintf("$$SV = R - kE$$]")
       } else if (input$func_form == "Parabolic") {
         sprintf("$$SV = R - kE^2$$")
       } else if (input$func_form == "Hyperbolic") {
@@ -125,7 +125,7 @@ server <- function(input, output) {
   
   # output$math_expressions <- renderUI({
   #   if (input$func_form == "Linear") {
-  #     sv_expr = sprintf("\\(SV = R - kE\\)")
+  #     sv_expr = sprintf("$$SV = R - kE$$")
   #   } else if (input$func_form == "Parabolic") {
   #     sv_expr = sprintf("$$SV = R - kE^2$$")
   #   } else if (input$func_form == "Hyperbolic") {
