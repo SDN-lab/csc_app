@@ -55,6 +55,7 @@ ui <- page_fillable(
     ),
     
     #Main page content
+    withMathJax(),
     selectInput("func_form",
                 "Select functional form",
                 choices = list("Linear" = "Linear", "Parabolic" = "Parabolic", "Hyperbolic" = "Hyperbolic"),
@@ -120,21 +121,21 @@ server <- function(input, output) {
     )
   })
   
-  output$math_expressions <- renderUI({
-    if (input$func_form == "Linear") {
-      sv_expr = sprintf("\\(SV = R - kE\\)")
-    } else if (input$func_form == "Parabolic") {
-      sv_expr = sprintf("$$SV = R - kE^2$$")
-    } else if (input$func_form == "Hyperbolic") {
-      sv_expr = sprintf("$$SV = \\frac{R}{1+kE}$$")
-    }
-    
-    withMathJax(
-      sv_expr, #SV formula
-      sprintf("$$P(work) = \\frac{e^{SV*\\beta}}{e^{SV*\\beta} + e^{1*\\beta}}$$") #softmax formula
-    )
-    
-  })
+  # output$math_expressions <- renderUI({
+  #   if (input$func_form == "Linear") {
+  #     sv_expr = sprintf("\\(SV = R - kE\\)")
+  #   } else if (input$func_form == "Parabolic") {
+  #     sv_expr = sprintf("$$SV = R - kE^2$$")
+  #   } else if (input$func_form == "Hyperbolic") {
+  #     sv_expr = sprintf("$$SV = \\frac{R}{1+kE}$$")
+  #   }
+  #   
+  #   withMathJax(
+  #     sv_expr, #SV formula
+  #     sprintf("$$P(work) = \\frac{e^{SV*\\beta}}{e^{SV*\\beta} + e^{1*\\beta}}$$") #softmax formula
+  #   )
+  #   
+  # })
   
    
   # output$sv_print <- renderUI({
