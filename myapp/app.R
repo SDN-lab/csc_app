@@ -105,7 +105,7 @@ server <- function(input, output) {
   output$sv_expression <- renderUI({
     withMathJax(
       if (input$func_form == "Linear") {
-        sprintf("$$SV = R - kE$$")
+        sprintf("\\(SV = R - kE\\)")
       } else if (input$func_form == "Parabolic") {
         sprintf("$$SV = R - kE^2$$")
       } else if (input$func_form == "Hyperbolic") {
