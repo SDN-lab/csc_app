@@ -9,8 +9,8 @@
 
 library(shiny)
 library(bslib) # for css stuff...
-library(DT) # editable data tables
-library(ggplot2)
+#library(DT) # editable data tables
+#library(ggplot2)
 
 options(shiny.mathjax.url = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js")
 
